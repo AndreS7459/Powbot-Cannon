@@ -72,10 +72,5 @@ public class RangePot extends Task {
         // wait for success confirmation or timeout failure
         Condition.wait(() -> hasDrunk(), 150, 75);
 
-        // double check the drinking was successful
-        if (Level == BoostedLevel)
-            execute();
-
-
     }
 }

@@ -54,9 +54,6 @@ public class Reload extends Task{
         // wait for success confirmation or timeout failure
         Condition.wait(() -> hasReloaded(), 150,75);
 
-        // make sure interact didnt fail
-        if (!hasReloaded())
-            execute();
 
         // generate a new ball reload number
         randomNumber = Random.nextInt(MinReload, MaxReload);

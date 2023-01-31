@@ -62,7 +62,7 @@ public class Script extends AbstractScript {
 
     // TODO
 
-    // DONE add safe spot location to run back to after reload (MAKE ITS OWN FILE)
+    // DONE add safe spot location to run back to after reload
     // DONE drink range potion
     // once checking for viewport if cant see turn viewport to face
 
@@ -73,7 +73,6 @@ public class Script extends AbstractScript {
     //
 
 
-    //public static String message = "";
     public static int randomNumber = 0;
     public static boolean StopScript = false;
     public static int CannonballsInCannon = 0;
@@ -166,31 +165,6 @@ public class Script extends AbstractScript {
 
 
     }
-
-
-    /*@Subscribe
-    public void onMessageEvent(MessageEvent e)
-    {
-        // get the confirmation message that we reloaded cannon
-        //message = e.getMessage();
-    }*/
-
-    /*@Subscribe
-    public void onRender(RenderEvent r)
-    {
-        Rendering.setScale(2.0f);
-        Rendering.setColor(Color.getCYAN());
-        //Rendering.drawString("Hello!", 50, 50);
-
-        //debug shit
-        //int CannonballsInCannon = Varpbits.varpbit(3);
-        //Rendering.drawString("Cannonballs: " + CannonballsInCannon, 50, 70);
-        //.drawString("Next reload: " + randomNumber, 50, 90);
-        //Rendering.drawString("Range Lvl: " + RangePot.Level, 50, 110);
-        //Rendering.drawString("Boosted Range Lvl: " + RangePot.BoostedLevel, 50, 130);
-        //Rendering.drawString("Range xp/h: " + (TrackSkillOption.ExpPerHour), 50, 150);
-
-    }*/
 
 
 

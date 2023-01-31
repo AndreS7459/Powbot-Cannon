@@ -61,8 +61,6 @@ public class InvCannonBalls extends Task {
         // wait for success confirmation or timeout failure
         Condition.wait(() -> hasPickedUp(), 150, 75);
 
-        if (!hasPickedUp())
-            execute();
 
         StopScript = true;
         Notifications.showNotification("Stopping script because out of cannonballs");

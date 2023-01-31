@@ -50,8 +50,5 @@ public class Fix extends Task {
         // wait for success confirmation or timeout failure
         Condition.wait(() -> hasRepaired(), 150,75);
 
-        if (!hasRepaired())
-            execute();
-
     }
 }
