@@ -11,10 +11,10 @@ import static Main.Script.*;
 
 public class Reload extends Task{
 
-    //public GameObject cannon = Objects.stream().within(15).name("Dwarf multicannon").nearest().first();
-    //public int CannonballsInCannon = Varpbits.varpbit(3);
 
-    public static int balls;
+    public Reload(String name) {
+        super(name);
+    }
 
     @Override
     public boolean validate() {
@@ -27,7 +27,7 @@ public class Reload extends Task{
             Item cannonball = Inventory.stream().name("Cannonball").first();
             if (cannonball.valid())
             {
-                GameObject cannon = Objects.stream().within(15).name("Dwarf multicannon").nearest().first();
+                GameObject cannon = Objects.stream().within(CannonTile, 0).name("Dwarf multicannon").nearest().first();
                 // check if cannon is in view
                 if (cannon.inViewport())
                     return true;
@@ -36,18 +36,30 @@ public class Reload extends Task{
         return false;
     }
 
+    public boolean hasReloaded()
+    {
+        int CannonballsInCannon = Varpbits.varpbit(3);
+        if (CannonballsInCannon >= MaxReload + 1 || CannonballsInCannon >= 25)
+            return true;
+
+        return false;
+    }
+
     @Override
     public void execute() {
 
-        GameObject cannon = Objects.stream().within(15).name("Dwarf multicannon").nearest().first();
+        GameObject cannon = Objects.stream().within(CannonTile, 0).name("Dwarf multicannon").nearest().first();
         // interact with cannon
         cannon.interact("Fire");
         // wait for success confirmation or timeout failure
-        Condition.wait(() -> message.contains("You load the cannon"), 150,25);
-        // clear the reload message (otherwise it will spam)
-        message = "";
+        Condition.wait(() -> hasReloaded(), 150,75);
+
+        // make sure interact didnt fail
+        if (!hasReloaded())
+            execute();
+
         // generate a new ball reload number
-        randomNumber = Random.nextInt(1, 4);
+        randomNumber = Random.nextInt(MinReload, MaxReload);
 
     }
 }
