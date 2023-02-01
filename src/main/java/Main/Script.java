@@ -19,8 +19,9 @@ import org.powbot.mobile.SettingsManager;
 import org.powbot.mobile.ToggleId;
 import org.powbot.mobile.drawing.Rendering;
 import org.powbot.mobile.script.ScriptManager;
-import java.util.*;
 
+import java.awt.event.ItemListener;
+import java.util.*;
 
 
 
@@ -39,8 +40,8 @@ import java.util.*;
                         defaultValue = "4"
                 ),
                 @ScriptConfiguration(
-                        name = "Drink Range Potion",
-                        description = "Drink range potion",
+                        name = "Drink Range Potion (Optional)",
+                        description = "Drink range potion (Optional)",
                         optionType = OptionType.BOOLEAN
                 ),
                 @ScriptConfiguration(
@@ -52,6 +53,18 @@ import java.util.*;
                         name = "SafeSpot Tile (Optional)",
                         description = "Select the tile of your safespot (Optional)",
                         optionType = OptionType.TILE
+                ),
+                @ScriptConfiguration(
+                        name = "High Alch (Optional)",
+                        description = "High Alch whilst cannoning (Optional)",
+                        optionType = OptionType.BOOLEAN
+                ),
+                @ScriptConfiguration(
+                        name = "High Alch Item",
+                        description = "Item to high alch",
+                        allowedValues = {"Black d'hide body", " Red d'hide body", "Blue d'hide body", "Adamant platebody", "Redwood shield", "Mithril pickaxe",
+                        "Green d'hide body", "Rune dagger", "Mithril platebody", "Adamant kiteshield", "Dragonstone bolts (e)", " Dragon javelin heads"},
+                        optionType = OptionType.STRING
                 ),
         }
 )
@@ -73,6 +86,7 @@ public class Script extends AbstractScript {
     //
 
 
+
     public static int randomNumber = 0;
     public static boolean StopScript = false;
     public static int CannonballsInCannon = 0;
@@ -87,13 +101,26 @@ public class Script extends AbstractScript {
     public static boolean DrinkRangePot;
     public static Tile CannonTile;
     public static Tile SafeSpotTile;
+    public static boolean HighAlch;
+    public static String AlchItem;
 
 
 
     @Override
     public void onStart() {
 
-        // check if player has a hammer
+        SettingsManager.set(ToggleId.DismissLevelUps, true);
+
+
+        MinReload = getOption("Min Reload");
+        MaxReload = getOption("Max Reload");
+        DrinkRangePot = getOption("Drink Range Potion (Optional)");
+        CannonTile = getOption("Cannon Tile");
+        SafeSpotTile = getOption("SafeSpot Tile (Optional)");
+        HighAlch = getOption("High Alch (Optional)");
+        AlchItem = getOption("High Alch Item");
+
+        // check if player has a hammer to repair cannon
         Item hammer = Inventory.stream().name("Hammer").first();
         if (!hammer.valid())
         {
@@ -101,24 +128,37 @@ public class Script extends AbstractScript {
             Notifications.showNotification("Please start script with a hammer in inventory");
         }
 
+        // make sure they have selected a cannon tile
+        if (!CannonTile.valid())
+        {
+            StopScript = true;
+            Notifications.showNotification("Please select cannon tile");
+        }
 
-
-        SettingsManager.set(ToggleId.DismissLevelUps, true);
-
-
-        tasks.add(new SafeSpot("Walking to safe spot"));
-        tasks.add(new RangePot("Drinking range potion"));
-        tasks.add(new Fix("Fixing the cannon"));
-        tasks.add(new InvCannonBalls("Picking up cannon (out of cannonballs)"));
-        tasks.add(new Reload("Reloading the cannon"));
-        tasks.add(new Idle("Idling"));
-
-
-        MinReload = getOption("Min Reload");
-        MaxReload = getOption("Max Reload");
-        DrinkRangePot = getOption("Drink Range Potion");
-        CannonTile = getOption("Cannon Tile");
-        SafeSpotTile = getOption("SafeSpot Tile (Optional)");
+        // make sure they have correct runes for high alch (not using firestaff as probs want bow for extra cannon accuracy)
+        //  make sure they have the high alch item
+        // make sure they are on correct magic book
+        if (HighAlch)
+        {
+            Item natureRunes = Inventory.stream().name("Nature rune").first();
+            Item fireRunes = Inventory.stream().name("Fire rune").first();
+            Item HighAlchItem = Inventory.stream().name(AlchItem).first();
+            if (!natureRunes.valid() || !fireRunes.valid())
+            {
+                StopScript = true;
+                Notifications.showNotification("Please start with nature and fire runes in inventory");
+            }
+            if (!HighAlchItem.valid())
+            {
+                StopScript = true;
+                Notifications.showNotification("Please start with the alch item in inventory");
+            }
+            if (Magic.book() != Magic.Book.MODERN)
+            {
+                StopScript = true;
+                Notifications.showNotification("Please start on normal spell book");
+            }
+        }
 
 
         // generate a new ball reload number
@@ -137,8 +177,18 @@ public class Script extends AbstractScript {
                 .addString("Next reload: ", () -> Integer.toString(randomNumber))
                 .trackSkill(Skill.Ranged)
                 .trackSkill(Skill.Hitpoints)
+                .trackSkill(Skill.Magic)
                 .build();
         addPaint(paint);
+
+
+        tasks.add(new SafeSpot("Walking to safe spot"));
+        tasks.add(new RangePot("Drinking range potion"));
+        tasks.add(new Fix("Fixing the cannon"));
+        tasks.add(new InvCannonBalls("Picking up cannon (out of cannonballs)"));
+        tasks.add(new Reload("Reloading the cannon"));
+        tasks.add(new HighAlch("High Alching"));
+        tasks.add(new Idle("Idling"));
 
     }
 
