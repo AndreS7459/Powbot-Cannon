@@ -62,8 +62,8 @@ import java.util.*;
                 @ScriptConfiguration(
                         name = "High Alch Item",
                         description = "Item to high alch",
-                        allowedValues = {"Black d'hide body", " Red d'hide body", "Blue d'hide body", "Adamant platebody", "Redwood shield", "Mithril pickaxe",
-                        "Green d'hide body", "Rune dagger", "Mithril platebody", "Adamant kiteshield", "Dragonstone bolts (e)", " Dragon javelin heads"},
+                        allowedValues = {"Black d'hide body", "Red d'hide body", "Blue d'hide body", "Adamant platebody", "Redwood shield", "Mithril pickaxe",
+                        "Green d'hide body", "Rune dagger", "Mithril platebody", "Adamant kiteshield", "Dragonstone bolts (e)", "Dragon javelin heads"},
                         optionType = OptionType.STRING
                 ),
         }
@@ -77,9 +77,13 @@ public class Script extends AbstractScript {
 
     // DONE add safe spot location to run back to after reload
     // DONE drink range potion
+    // DONE add high alching
+
+    // change walking back to safespot method so it clicks on screen (not mini map)
+    // change Fire to check orientation instead of cannonballs are still being used
     // once checking for viewport if cant see turn viewport to face
 
-    // add high alching
+
     // add fletch darts/bolts
     // add also attack the monsters
     // use prayers and food
@@ -186,6 +190,7 @@ public class Script extends AbstractScript {
         tasks.add(new RangePot("Drinking range potion"));
         tasks.add(new Fix("Fixing the cannon"));
         tasks.add(new InvCannonBalls("Picking up cannon (out of cannonballs)"));
+        tasks.add(new Fire("Firing the cannon"));
         tasks.add(new Reload("Reloading the cannon"));
         tasks.add(new HighAlch("High Alching"));
         tasks.add(new Idle("Idling"));
