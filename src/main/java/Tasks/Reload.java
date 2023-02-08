@@ -50,13 +50,13 @@ public class Reload extends Task{
 
         GameObject cannon = Objects.stream().within(CannonTile, 0).name("Dwarf multicannon").nearest().first();
         // interact with cannon
-        cannon.interact("Fire");
-        // wait for success confirmation or timeout failure
-        Condition.wait(() -> hasReloaded(), 150,75);
+        if(cannon.interact("Fire"))
+        {
+            // wait for success confirmation or timeout failure
+            Condition.wait(() -> hasReloaded(), 150,75);
 
-
-        // generate a new ball reload number
-        randomNumber = Random.nextInt(MinReload, MaxReload);
-
+            // generate a new ball reload number
+            randomNumber = Random.nextInt(MinReload, MaxReload);
+        }
     }
 }

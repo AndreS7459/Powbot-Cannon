@@ -79,7 +79,6 @@ public class Script extends AbstractScript {
     // DONE drink range potion
     // DONE add high alching
 
-    // change walking back to safespot method so it clicks on screen (not mini map)
     // change Fire to check orientation instead of cannonballs are still being used
     // once checking for viewport if cant see turn viewport to face
 

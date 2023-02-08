@@ -66,11 +66,11 @@ public class RangePot extends Task {
     @Override
     public void execute() {
 
-
         // drink pot
-        RangePotion.interact("Drink");
-        // wait for success confirmation or timeout failure
-        Condition.wait(() -> hasDrunk(), 150, 75);
-
+        if (RangePotion.interact("Drink"))
+        {
+            // wait for success confirmation or timeout failure
+            Condition.wait(() -> hasDrunk(), 150, 75);
+        }
     }
 }

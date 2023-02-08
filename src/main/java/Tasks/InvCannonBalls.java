@@ -57,13 +57,17 @@ public class InvCannonBalls extends Task {
 
         GameObject cannon = Objects.stream().within(CannonTile, 0).name("Dwarf multicannon").nearest().first();
         // interact with cannon
-        cannon.interact("Pick-up");
-        // wait for success confirmation or timeout failure
-        Condition.wait(() -> hasPickedUp(), 150, 75);
+        if(cannon.interact("Pick-up"))
+        {
+            // wait for success confirmation or timeout failure
+            Condition.wait(() -> hasPickedUp(), 150, 75);
 
-
-        StopScript = true;
-        Notifications.showNotification("Stopping script because out of cannonballs");
-
+            // make sure it has picked up cannon  and not failed due to timeout before stopping
+            if (hasPickedUp())
+            {
+                StopScript = true;
+                Notifications.showNotification("Stopping script because out of cannonballs");
+            }
+        }
     }
 }

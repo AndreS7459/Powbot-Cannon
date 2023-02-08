@@ -77,8 +77,10 @@ public class Fire extends Task {
 
         GameObject cannon = Objects.stream().within(CannonTile, 0).name("Dwarf multicannon").nearest().first();
         // interact with cannon
-        cannon.interact("Fire");
-        Condition.wait(() -> isFiring(), 150,75);
+        if (cannon.interact("Fire"))
+        {
+            Condition.wait(() -> isFiring(), 150,75);
+        }
 
     }
 }

@@ -46,9 +46,13 @@ public class Fix extends Task {
 
         GameObject brokenCannon = Objects.stream().within(CannonTile, 0).name("Broken multicannon").nearest().first();
         // interact with cannon
-        brokenCannon.interact("Repair");
-        // wait for success confirmation or timeout failure
-        Condition.wait(() -> hasRepaired(), 150,75);
+        if (brokenCannon.interact("Repair"))
+        {
+            // wait for success confirmation or timeout failure
+            Condition.wait(() -> hasRepaired(), 150,75);
+        }
+
+
 
     }
 }
